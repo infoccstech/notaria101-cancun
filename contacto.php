@@ -27,6 +27,12 @@ $telefono = isset($_POST['telefono']) ? trim(htmlspecialchars($_POST['telefono']
 $servicio = isset($_POST['servicio']) ? trim(htmlspecialchars($_POST['servicio'])) : '';
 $mensaje = isset($_POST['mensaje']) ? trim(htmlspecialchars($_POST['mensaje'])) : '';
 
+// Honeypot anti-spam check
+if (!empty($_POST['website'])) {
+    echo json_encode(['success' => true, 'message' => '¡Mensaje enviado con éxito!']);
+    exit;
+}
+
 // Validación
 if (empty($nombre) || empty($email) || empty($mensaje)) {
     http_response_code(400);

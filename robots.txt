@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin.php
+Disallow: /api.php
+Disallow: /contacto.php
+
+Sitemap: https://www.notaria101.com/sitemap.xml

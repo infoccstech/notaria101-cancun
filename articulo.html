@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Artículo | Notaría Pública 101 Cancún</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-text">NOTARÍA PÚBLICA <span class="gold-accent">101</span></a>
+            </div>
+            <div class="nav-links">
+                <a href="/#about" class="nav-link">Conócenos</a>
+                <a href="/#services" class="nav-link">Servicios</a>
+                <a href="/blog.html" class="nav-link active">Blog</a>
+                <a href="/#contact" class="nav-link">Contacto</a>
+            </div>
+            <a href="https://wa.me/529986522553" target="_blank" class="btn btn-outline">
+                <i class="ri-whatsapp-line"></i> Agendar Diagnóstico
+            </a>
+        </div>
+    </nav>
+
+    <!-- Article Content -->
+    <article class="article-page">
+        <div class="container">
+
+            <a href="/blog.html" class="article-back">
+                <i class="ri-arrow-left-line"></i> Volver al Blog
+            </a>
+
+            <div id="article-content" class="article-content">
+                <!-- Loaded by JS -->
+            </div>
+
+            <div class="article-cta">
+                <h3>¿Necesitas asesoría sobre este tema?</h3>
+                <p>Contáctanos para una consulta sin costo.</p>
+                <a href="https://wa.me/529986522553" target="_blank" class="btn btn-primary">
+                    <i class="ri-whatsapp-line"></i> Enviar WhatsApp
+                </a>
+            </div>
+
+        </div>
+    </article>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Notaría Pública 101 Cancún. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = parseInt(params.get('id'));
+        const container = document.getElementById('article-content');
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr + 'T00:00:00');
+            return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        fetch('/api.php')
+            .then(res => res.json())
+            .then(articulos => {
+                const art = articulos.find(a => a.id === id);
+                if (!art) {
+                    container.innerHTML = `
+                        <h1 class="article-title">Artículo no encontrado</h1>
+                        <p>El artículo que buscas no existe. <a href="/blog.html">Volver al blog</a>.</p>
+                    `;
+                } else {
+                    document.title = `${art.titulo} | Notaría Pública 101`;
+                    container.innerHTML = `
+                        <div class="article-meta">
+                          <span><i class="ri-calendar-line"></i> ${formatDate(art.fecha)}</span>
+                          <span><i class="ri-user-line"></i> ${art.autor}</span>
+                        </div>
+                        <h1 class="article-title">${art.titulo}</h1>
+                        ${art.imagen ? `<div class="article-hero-image"><img src="${art.imagen}" alt="${art.titulo}" /></div>` : ''}
+                        <div class="article-body">${art.contenido}</div>
+                    `;
+                }
+            })
+            .catch(() => {
+                container.innerHTML = '<p>Error al cargar el artículo.</p>';
+            });
+    </script>
+
+</body>
+
+</html>

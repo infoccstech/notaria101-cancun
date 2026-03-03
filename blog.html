@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog | Notaría Pública 101 Cancún</title>
+    <meta name="description"
+        content="Artículos y guías sobre trámites notariales, escrituración, testamentos y más. Información legal de confianza por Notaría Pública 101 en Cancún.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-text">NOTARÍA PÚBLICA <span class="gold-accent">101</span></a>
+            </div>
+            <div class="nav-links">
+                <a href="/#about" class="nav-link">Conócenos</a>
+                <a href="/#services" class="nav-link">Servicios</a>
+                <a href="/blog.html" class="nav-link active">Blog</a>
+                <a href="/#contact" class="nav-link">Contacto</a>
+            </div>
+            <a href="https://wa.me/529986522553" target="_blank" class="btn btn-outline">
+                <i class="ri-whatsapp-line"></i> Agendar Diagnóstico
+            </a>
+        </div>
+    </nav>
+
+    <!-- Blog Header -->
+    <section class="blog-header">
+        <div class="container">
+            <p class="hero-subtitle">CONOCIMIENTO LEGAL</p>
+            <h1 class="section-title">Nuestro Blog</h1>
+            <div class="title-line"></div>
+        </div>
+    </section>
+
+    <!-- Blog Grid -->
+    <section class="blog-section">
+        <div class="container">
+            <div id="blog-grid" class="blog-grid">
+                <!-- Articles loaded by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Notaría Pública 101 Cancún. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        const grid = document.getElementById('blog-grid');
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr + 'T00:00:00');
+            return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        fetch('/api.php')
+            .then(res => res.json())
+            .then(articulos => {
+                if (articulos.length === 0) {
+                    grid.innerHTML = '<p style="color:#a0a0ab;text-align:center;padding:4rem 0">Próximamente publicaremos artículos de interés legal.</p>';
+                    return;
+                }
+                articulos.forEach(art => {
+                    const card = document.createElement('article');
+                    card.className = 'blog-card reveal active';
+                    card.innerHTML = `
+                        <a href="/articulo.html?id=${art.id}" class="blog-card-link">
+                          <div class="blog-card-image">
+                            <img src="${art.imagen}" alt="${art.titulo}" loading="lazy" />
+                          </div>
+                          <div class="blog-card-body">
+                            <span class="blog-card-date"><i class="ri-calendar-line"></i> ${formatDate(art.fecha)}</span>
+                            <h2 class="blog-card-title">${art.titulo}</h2>
+                            <p class="blog-card-summary">${art.resumen}</p>
+                            <span class="blog-card-cta">Leer artículo <i class="ri-arrow-right-line"></i></span>
+                          </div>
+                        </a>
+                    `;
+                    grid.appendChild(card);
+                });
+            })
+            .catch(() => {
+                grid.innerHTML = '<p style="color:#a0a0ab;text-align:center;padding:4rem 0">Error al cargar artículos.</p>';
+            });
+    </script>
+
+</body>
+
+</html>
